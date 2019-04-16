@@ -14,27 +14,41 @@ PORT3FROM="$(jq --raw-output '.port3from' $CONFIG_PATH)"
 PORT3TO="$(jq --raw-output '.port3to' $CONFIG_PATH)"
 RETRY_TIME="$(jq --raw-output '.retry_time' $CONFIG_PATH)"
 
-if [ "${DOMAIN}" == "" ]
+if [ "$ALIAS" == "" ]
 then
-    DOMAIN="${ALIAS}.${SERVER}"
+  DOMAIN_PREFIX=""
+  ALIAS_PREFIX=""
+else
+  DOMAIN_PREFIX="${ALIAS}."
+  ALIAS_PREFIX="${ALIAS}@"
 fi
 
-PORT1="-R ${DOMAIN}:${PORT1TO}:localhost:${PORT1FROM}"
+if [ "${DOMAIN}" != "" ]
+then
+    DOMAIN_PARAM="${DOMAIN_PREFIX}${SERVER}:"
+else
+    DOMAIN_PARAM=""
+fi
+
+
+PORT1="-R ${DOMAIN_PARAM}${PORT1TO}:localhost:${PORT1FROM}"
 PORT2=""
 PORT3=""
 
 
 if [ "${PORT2FROM}" != "0" ] && ["${PORT2TO}" != "0"]
 then
-    PORT2=" -R ${DOMAIN}:${PORT2TO}:localhost:${PORT2FROM}"
+    PORT2=" -R ${DOMAIN_PARAM}${PORT2TO}:localhost:${PORT2FROM}"
 fi
 
 if [ "${PORT3FROM}" != "0" ] && ["${PORT3TO}" != "0"]
 then
-    PORT3=" -R  ${DOMAIN}:${PORT3TO}:localhost:${PORT3FROM}"
+    PORT3=" -R  ${DOMAIN_PARAM}${PORT3TO}:localhost:${PORT3FROM}"
 fi
 
-CMD="/bin/bash -c 'sleep ${RETRY_TIME} && ssh -tt -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -o ServerAliveCountMax=3 ${PORT1}${PORT2}${PORT3} ${ALIAS}@${SERVER}'"
+
+
+CMD="/bin/bash -c 'sleep ${RETRY_TIME} && ssh -tt -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -o ServerAliveCountMax=3 ${PORT1}${PORT2}${PORT3} ${ALIAS_PREFIX}${SERVER}'"
 
 echo "Running '${CMD}' through supervisor!"
 
