@@ -11,6 +11,7 @@
   "options": {
     "alias": null,
     "server": "serveo.net",
+    "ssh_port": 0,
     "port1from": 8123,
     "port1to": 80,
     "port2from": 0,
@@ -23,6 +24,7 @@
   "schema": {
     "alias": "str",
     "server": "str",
+    "ssh_port": "int",
     "port1from": "int",
     "port1to": "int",
     "port2from": "int",
