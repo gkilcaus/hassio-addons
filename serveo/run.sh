@@ -5,6 +5,7 @@ CONFIG_PATH=/data/options.json
 
 ALIAS="$(jq --raw-output '.alias' $CONFIG_PATH)"
 SERVER="$(jq --raw-output '.server' $CONFIG_PATH)"
+SSH_PORT="$(jq --raw-output '.ssh_port' $CONFIG_PATH)"
 DOMAIN="$(jq --raw-output '.domain' $CONFIG_PATH)"
 PORT1FROM="$(jq --raw-output '.port1from' $CONFIG_PATH)"
 PORT1TO="$(jq --raw-output '.port1to' $CONFIG_PATH)"
@@ -21,6 +22,13 @@ then
 else
   DOMAIN_PREFIX="${ALIAS}."
   ALIAS_PREFIX="${ALIAS}@"
+fi
+
+if [ "$SSH_PORT" != "" ]
+then
+  SSH_PORT_PARAM="-p $SSH_PORT"
+else
+  SSH_PORT_PARAM=""
 fi
 
 if [ "${DOMAIN}" != "" ]
@@ -48,7 +56,7 @@ fi
 
 
 
-CMD="/bin/bash -c 'sleep ${RETRY_TIME} && ssh -tt -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -o ServerAliveCountMax=3 ${PORT1}${PORT2}${PORT3} ${ALIAS_PREFIX}${SERVER}'"
+CMD="/bin/bash -c 'sleep ${RETRY_TIME} && ssh ${SSH_PORT_PARAM} -tt -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -o ServerAliveCountMax=3 ${PORT1}${PORT2}${PORT3} ${ALIAS_PREFIX}${SERVER}'"
 
 echo "Running '${CMD}' through supervisor!"
 
