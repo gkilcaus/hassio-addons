@@ -24,7 +24,7 @@ else
   ALIAS_PREFIX="${ALIAS}@"
 fi
 
-if [ "$SSH_PORT" != "" ]
+if [ "$SSH_PORT" != "0" ]
 then
   SSH_PORT_PARAM="-p $SSH_PORT"
 else
