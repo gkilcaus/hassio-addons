@@ -14,6 +14,7 @@ PORT2TO="$(jq --raw-output '.port2to' $CONFIG_PATH)"
 PORT3FROM="$(jq --raw-output '.port3from' $CONFIG_PATH)"
 PORT3TO="$(jq --raw-output '.port3to' $CONFIG_PATH)"
 RETRY_TIME="$(jq --raw-output '.retry_time' $CONFIG_PATH)"
+IDRSA="$(jq --raw-output '.id_rsa' $CONFIG_PATH)"
 
 if [ "$ALIAS" == "" ]
 then
@@ -54,6 +55,14 @@ then
     PORT3=" -R  ${DOMAIN_PARAM}${PORT3TO}:localhost:${PORT3FROM}"
 fi
 
+if [ "$IDRSA" != "" ]
+then
+    if [ ! -d "/root/.ssh" ]; then
+    mkdir "/root/.ssh"
+    fi
+    cp "$IDRSA" "/root/.ssh/id_rsa"
+    chmod 600 "/root/.ssh/id_rsa"
+fi
 
 
 CMD="/bin/bash -c 'sleep ${RETRY_TIME} && ssh ${SSH_PORT_PARAM} -tt -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -o ServerAliveCountMax=3 ${PORT1}${PORT2}${PORT3} ${ALIAS_PREFIX}${SERVER}'"

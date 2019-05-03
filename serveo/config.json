@@ -1,13 +1,14 @@
 {
   "name": "Serveo Reverse SSL Proxy",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "slug": "serveo",
   "description": "Expose Your hassio to the internet through SSL/HTTPS with one click thanks to SERVEO.net. You DO NOT need to: have external IP, make any router configuration (no need to forward any port), create any logins (DuckDNS and others dynamic DNS services require all this hassle).",
-  "url": "https://github.com/kataloo/hassio-addons/tree/master/serveo",
+  "url": "https://github.com/gkilcaus/hassio-addons/tree/master/serveo",
   "arch": ["armhf", "aarch64", "amd64", "i386"],
   "startup": "application",
   "boot": "auto",
   "host_network": true,
+  "map": ["ssl:ro"],
   "options": {
     "alias": null,
     "server": "serveo.net",
@@ -19,7 +20,9 @@
     "port3from": 0,
     "port3to": 0,
     "domain": "",
+    "id_rsa": "",
     "retry_time": 15
+
   },
   "schema": {
     "alias": "str",
@@ -32,6 +35,7 @@
     "port3from": "int",
     "port3to": "int",
     "domain": "str",
+    "id_rsa": "str",
     "retry_time": "int"
   }
 }
