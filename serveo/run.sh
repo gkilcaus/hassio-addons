@@ -34,7 +34,7 @@ fi
 
 if [ "${DOMAIN}" != "" ]
 then
-    DOMAIN_PARAM="${DOMAIN_PREFIX}${SERVER}:"
+    DOMAIN_PARAM="${DOMAIN}:"
 else
     DOMAIN_PARAM=""
 fi
